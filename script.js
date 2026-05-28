@@ -18,12 +18,19 @@ String.prototype.toInt = function () {
 
 class Field {
 	constructor(containerHTML, pipeSpeed=2) {
+		this.initScoreBlock();
 		this.html = HTML.createElem('div', containerHTML, 'field');
 		this.bird = new Bird(this);
 		this.pipeSpeed = pipeSpeed;
 		this.height = getComputedStyle(this.html).height.toInt();
 		this.pipeGap = this.height / 5;
 		this.createPipes();
+	}
+
+	initScoreBlock() {
+		this.scoreHTML = HTML.createElem('p', document.querySelector('.info'), 'score')
+		this.scoreHTML.innerText = 0;
+		this.score = 0;
 	}
 
 	createPipes() {
@@ -44,7 +51,7 @@ class Field {
 
 	inGap() {
 		return this.bird.getY() > this.topPipe.getHeight() &&
-			this.bird.getY() < this.topPipe.getHeight() + this.pipeGap;
+			this.bird.getY()+this.bird.getHeight() < this.topPipe.getHeight() + this.pipeGap;
 	}
 
 	checkGap() {
@@ -68,6 +75,10 @@ class Field {
 		clearInterval(this.bottomPipe.movingId);
 	}
 
+	addScore() {
+		this.scoreHTML.innerText = ++this.score;
+	}
+
 	getHTML() { return this.html; }
 }
 
@@ -78,7 +89,16 @@ class Bird {
 		this.jumpSize = 5;
 		this.field = field;
 		this.html = HTML.createElem('div', field.getHTML(), 'bird');
+		this.setHeight();
 		this.move();
+	}
+
+	getHeight() {
+		return getComputedStyle(this.html).height.toInt();
+	}
+
+	setHeight() {
+		this.html.style.height = getComputedStyle(this.html).width.toInt()*0.555+'px';
 	}
 
 	getY() {
@@ -102,14 +122,14 @@ class Bird {
 		this.speed+=this.acceleration;
 	}
 
-	handleClicks(accelerationId, movingId) {
-		document.querySelector('body').addEventListener('click', ()=>{this.speed=-this.jumpSize;});
+	handleClicks() {
+		document.addEventListener('click', ()=>{this.speed = -this.jumpSize;});
 	}
 
 	move() {
 		this.accelerationId = setInterval(()=>{this.accelerate()}, 10);
 		this.movingId = setInterval(()=>{this.fall()}, 10);
-		this.handleClicks(this.accelerationId, this.movingId);
+		this.handleClicks();
 	}
 }
 
@@ -127,7 +147,6 @@ class Pipe {
 	}
 
 	getHeight() {
-		//console.log(getComputedStyle(this.html).height.toInt());
 		return getComputedStyle(this.html).height.toInt();
 	}
 
@@ -155,7 +174,10 @@ class Pipe {
 	movement() {
 		if (this.getX() < 0) {
 			this.setRight(0);
-			if (this.position == 'top') this.field.setPipesHeights();
+			if (this.position == 'top') {
+				this.field.setPipesHeights();
+				this.field.addScore();
+			}
 		}
 		else if (this.getX() < this.field.getWidth() / 2 && this.getX() > this.field.getWidth() / 2.5) {
 			this.field.checkGap();

@@ -9,13 +9,16 @@
 }
 
 .bird {
-	width: 7%;
+	width: 15%;
 	aspect-ratio: 1/1;
 	border-radius: 50%;
 	position: absolute;
 	left: 45%;
 	top: 30%;
-	background-color: yellow;
+	/* background-color: yellow; */
+	background-image: url("bird.png");
+	background-size: contain;
+	background-repeat: no-repeat;
 }
 
 .pipe {
@@ -31,4 +34,8 @@
 
 .bottom {
 	bottom: 0;
+}
+
+.score::before {
+	content: "Score: ";
 }
