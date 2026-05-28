@@ -1,0 +1,34 @@
+.field {
+	border: 2px solid black;
+	width: 400px;
+	height: 900px;
+	box-sizing: border-box;
+	background-color: #FCF7E6;
+	overflow: hidden;
+	position: absolute;
+}
+
+.bird {
+	width: 7%;
+	aspect-ratio: 1/1;
+	border-radius: 50%;
+	position: absolute;
+	left: 45%;
+	top: 30%;
+	background-color: yellow;
+}
+
+.pipe {
+	background-color: #009608;
+	width: 7%;
+	position: absolute;
+	right: 0;
+}
+
+.top {
+	top: 0;
+}
+
+.bottom {
+	bottom: 0;
+}
